@@ -14,6 +14,7 @@ function* rootSaga() {
     yield takeEvery('FETCH_GIFS', fetchGifs);
     yield takeEvery('FETCH_CATEGORIES', fetchCategories);
     yield takeEvery('POST_FAVORITE', postFavorite);
+    yield takeEvery('FETCH_FAVORITES', fetchFavorites);
 };
 
 
@@ -43,6 +44,19 @@ function* fetchCategories() {
     }
 }
 
+function* fetchFavorites() {
+    try {
+        console.log('in fetchFavorites');
+        const favorites = yield axios.get('/api/favorite');
+        console.log('in fetchFavorites. Favorite GIFs are:', favorites.data);
+        // after successful GET, dispatch action SET_FAVORITES
+        yield put({type: 'SET_FAVORITES', payload: favorites.data});
+    } catch (error) {
+        console.log('Error in fetchFavorites:', error);
+        alert('Error in fetchFavorites');
+    }
+}
+
 function* postFavorite(action) {
     try {
         console.log('favorited giphy id is:', action.payload.giphy_id);
@@ -54,7 +68,6 @@ function* postFavorite(action) {
         alert('Error in postFavorite');
     }
 }
-
 
 // create sagaMiddleware
 const sagaMiddleware = createSagaMiddleware();
@@ -75,12 +88,21 @@ const categories = (state = [], action) => {
     return state;
 }
 
+// reducer to store favorites from server
+const favorites = (state = [], action) => {
+    if (action.type === "SET_FAVORITES") {
+        return action.payload;
+    } 
+    return state;
+}
+
 // create store that components can use
 const storeInstance = createStore(
     combineReducers({
         //reducers go here
         results,
         categories,
+        favorites
     }),
     // sagaMiddleware for store
     applyMiddleware(sagaMiddleware, logger),
