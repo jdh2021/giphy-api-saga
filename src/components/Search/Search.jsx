@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import SearchResult from '../SearchResult/SearchResult';
 
 
 function Search() {
     const dispatch = useDispatch();
     // local state for changeable values of input fields
     const [searchTerm, setSearchTerm] = useState('');
-    const [categoryInput, setCategoryInput] = useState('');
 
     //useSelector to retrieve search results from store
     const searchResults = useSelector(store => store.results);
@@ -17,6 +17,8 @@ function Search() {
         console.log('searchTerm is:', searchTerm);
         dispatch({ type: 'FETCH_GIFS', payload: searchTerm })
     }
+
+
 
     // dispatch 'FETCH_CATEGORIES' when page loads
     useEffect(() => {
@@ -36,25 +38,14 @@ function Search() {
                     {searchResults.map(gif => {
                         console.log(gif.images.fixed_height_small.url);
                         return (
-                            <tr key={gif.id}>
-                                <td>
-                                    <img src={gif.images.fixed_height_small.url} width="250" height="250" />
-                                    <br />
-                                    <label> Choose a category: </label>
-                                    <select value={categoryInput} onChange={(event) => setCategoryInput(event.target.value)}>
-                                        {categories.map(category => {
-                                            return (
-                                                <option value={category.name}>{category.name}</option>
-                                            )
-                                        })}
-                                    </select>
-                                    <br />
-                                    <button onClick={() => submitFavorite()}>Make Favorite</button>
-                                </td>
-                            </tr>
+                            <SearchResult
+                                key={gif.id}
+                                gif={gif}
+                                categories={categories}
+                            />
                         )
                     })}
-                </tbody>
+                            </tbody>
             </table>
         </div>
     )
