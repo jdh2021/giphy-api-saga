@@ -12,6 +12,7 @@ function* rootSaga() {
     // watch for action, call generator function
     console.log('rootSaga');
     yield takeEvery('FETCH_GIFS', fetchGifs);
+    yield takeEvery('FETCH_CATEGORIES', fetchCategories);
 };
 
 
@@ -28,11 +29,34 @@ function* fetchGifs(action) {
     }
 }
 
+function* fetchCategories() {
+    try {
+        console.log('in fetchCategories');
+        const categories = yield axios.get('/api/category');
+        console.log('in fetchCategories. Categories are:', categories.data);
+        // after successful GET, dispatch action SET_SEARCH_RESULTS
+        yield put({type: 'SET_CATEGORIES', payload: categories.data});
+    } catch (error) {
+        console.log('Error in fetchCategories:', error);
+        alert('Error in fetchCategories');
+    }
+}
+
+
 // create sagaMiddleware
 const sagaMiddleware = createSagaMiddleware();
 
+// reducer to store results from API request 
 const results = (state = [], action) => {
     if (action.type === "SET_SEARCH_RESULTS") {
+        return action.payload;
+    } 
+    return state;
+}
+
+// reducer to store categories from server
+const categories = (state = [], action) => {
+    if (action.type === "SET_CATEGORIES") {
         return action.payload;
     } 
     return state;
@@ -42,7 +66,8 @@ const results = (state = [], action) => {
 const storeInstance = createStore(
     combineReducers({
         //reducers go here
-        results
+        results,
+        categories,
     }),
     // sagaMiddleware for store
     applyMiddleware(sagaMiddleware, logger),

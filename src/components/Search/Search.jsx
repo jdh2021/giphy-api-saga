@@ -7,9 +7,11 @@ function Search() {
     const dispatch = useDispatch();
     // local state for changeable values of input fields
     const [searchTerm, setSearchTerm] = useState('');
+    const [categoryInput, setCategoryInput] = useState('');
 
     //useSelector to retrieve search results from store
     const searchResults = useSelector(store => store.results);
+    const categories = useSelector(store => store.categories);
 
     const submitSearch = () => {
         console.log('searchTerm is:', searchTerm);
@@ -33,17 +35,21 @@ function Search() {
                 <tbody>
                     {searchResults.map(gif => {
                         console.log(gif.images.fixed_height_small.url);
-                        return ( 
-                            <tr>
+                        return (
+                            <tr key={gif.id}>
                                 <td>
                                     <img src={gif.images.fixed_height_small.url} width="250" height="250" />
                                     <br />
-                                    <label for="categories">Choose a category: </label>
-                                    <select name="categories" id="categories">
-                                        {/* loop over categories */}
+                                    <label> Choose a category: </label>
+                                    <select value={categoryInput} onChange={(event) => setCategoryInput(event.target.value)}>
+                                        {categories.map(category => {
+                                            return (
+                                                <option value={category.name}>{category.name}</option>
+                                            )
+                                        })}
                                     </select>
                                     <br />
-                                    <button>Make Favorite</button>
+                                    <button onClick={() => submitFavorite()}>Make Favorite</button>
                                 </td>
                             </tr>
                         )
