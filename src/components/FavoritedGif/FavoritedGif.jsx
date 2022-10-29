@@ -1,18 +1,23 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-function FavoritedGif({ gif}) {
+function FavoritedGif({ favorite }) {
     const dispatch = useDispatch();
-    const [categoryId, setCategoryId] = useState(gif.category_id);
+    const [categoryId, setCategoryId] = useState(favorite.category_id);
 
     const categories = useSelector(store => store.categories);
 
+    const updateFavorite = ( favoriteId, categoryId) => {
+        console.log('in updateFavorite');
+        dispatch({ type: 'PUT_FAVORITE', payload: { id: favoriteId, category_id: categoryId }});
+    }
+
     return (
-        <tr key={gif.id}>
+        <tr key={favorite.id}>
             <td>
-                <img src={gif.giphy_url} width="250" height="250" />
+                <img src={favorite.giphy_url} width="250" height="250" />
                 <br />
-                <label> Update Category: </label>
+                <label> Category: </label>
                 <select value={categoryId} onChange={(event) => setCategoryId(event.target.value)}>
                     {categories.map(category => {
                         return (
@@ -20,8 +25,8 @@ function FavoritedGif({ gif}) {
                         )
                     })}
                 </select>
-                {/* <br />
-                <button onClick={() => updateFavorite(categoryId, gif.id, gif.images.fixed_height_small.url)}>Favorite</button> */}
+                <br />
+                <button onClick={() => updateFavorite(favorite.id, categoryId)}>Update</button>
             </td>
         </tr>
     )

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import FavoritedGif from '../FavoritedGif/FavoritedGif';
@@ -25,11 +25,11 @@ function Favorites() {
             <table>
                 <thead><tr><td><h3>Favorites</h3></td></tr></thead>
                 <tbody>
-                    {favorites.map(gif => {
+                    {favorites.map(favorite => {
                         return (
                             <FavoritedGif
-                                key={gif.giphy_id}
-                                gif={gif}
+                                key={favorite.giphy_id}
+                                favorite={favorite}
                                 categories={categories}
                             />
                         )
