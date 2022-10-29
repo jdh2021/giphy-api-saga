@@ -5,7 +5,7 @@ function SearchResult({ gif, categories }) {
     const dispatch = useDispatch();
     const [categoryId, setCategoryId] = useState(categories[0].id);
 
-    const submitFavorite = (categoryId, giphyId) => {
+    const submitFavorite = (categoryId, giphyId, giphyUrl) => {
         console.log('selected category is:', categoryId);
         console.log('giphy_id to favorite is:', giphyId);
         if (categoryId === '') {
@@ -13,7 +13,7 @@ function SearchResult({ gif, categories }) {
             return;
         }
         else {
-            dispatch({ type: 'POST_FAVORITE', payload: { giphy_id: giphyId, category_id: categoryId } })
+            dispatch({ type: 'POST_FAVORITE', payload: { giphy_id: giphyId, category_id: categoryId, giphy_url: giphyUrl } })
         }
     }
 
@@ -31,7 +31,7 @@ function SearchResult({ gif, categories }) {
                     })}
                 </select>
                 <br />
-                <button onClick={() => submitFavorite(categoryId, gif.id)}>Make Favorite</button>
+                <button onClick={() => submitFavorite(categoryId, gif.id, gif.images.fixed_height_small.url)}>Favorite</button>
             </td>
         </tr>
     )
