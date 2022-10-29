@@ -1,13 +1,20 @@
 import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-function SearchResult({gif, categories }) {
+function SearchResult({ gif, categories }) {
+    const dispatch = useDispatch();
+    const [categoryId, setCategoryId] = useState(categories[0].id);
 
-    const [categoryInput, setCategoryInput] = useState('');
-
-    const submitFavorite = (category, url) => {
-        console.log('selected category is:', category);
-        console.log('gif url is:', url);
-
+    const submitFavorite = (categoryId, giphyId) => {
+        console.log('selected category is:', categoryId);
+        console.log('giphy_id to favorite is:', giphyId);
+        if (categoryId === '') {
+            alert('Please select a category');
+            return;
+        }
+        else {
+            dispatch({ type: 'POST_FAVORITE', payload: { giphy_id: giphyId, category_id: categoryId } })
+        }
     }
 
     return (
@@ -16,15 +23,15 @@ function SearchResult({gif, categories }) {
                 <img src={gif.images.fixed_height_small.url} width="250" height="250" />
                 <br />
                 <label> Choose a category: </label>
-                <select value={categoryInput} onChange={(event) => setCategoryInput(event.target.value)}>
+                <select value={categoryId} onChange={(event) => setCategoryId(event.target.value)}>
                     {categories.map(category => {
                         return (
-                            <option value={category.name} key={category.id}>{category.name}</option>
+                            <option value={category.id} key={category.id}>{category.name}</option>
                         )
                     })}
                 </select>
                 <br />
-                <button onClick={() => submitFavorite(categoryInput, gif.images.fixed_height_small.url)}>Make Favorite</button>
+                <button onClick={() => submitFavorite(categoryId, gif.id)}>Make Favorite</button>
             </td>
         </tr>
     )

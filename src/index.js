@@ -13,6 +13,7 @@ function* rootSaga() {
     console.log('rootSaga');
     yield takeEvery('FETCH_GIFS', fetchGifs);
     yield takeEvery('FETCH_CATEGORIES', fetchCategories);
+    yield takeEvery('POST_FAVORITE', postFavorite);
 };
 
 
@@ -39,6 +40,18 @@ function* fetchCategories() {
     } catch (error) {
         console.log('Error in fetchCategories:', error);
         alert('Error in fetchCategories');
+    }
+}
+
+function* postFavorite(action) {
+    try {
+        console.log('favorited giphy id is:', action.payload.giphy_id);
+        console.log('category id of favorite GIF is:', action.payload.category_id);
+        yield axios.post('/api/favorite', action.payload);
+        console.log('postFavorite success');
+    } catch (error) {
+        console.log('Error in postFavorite:', error);
+        alert('Error in postFavorite');
     }
 }
 
