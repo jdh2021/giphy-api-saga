@@ -6,7 +6,7 @@ const router = express.Router();
 // return all favorite images
 router.get('/', (req, res) => {
   console.log('in /favorite GET');
-  const queryText = 'SELECT * FROM "favorites";';
+  const queryText = 'SELECT * FROM "favorites" ORDER BY "id";';
   pool.query(queryText).then(result => {
     res.send(result.rows); // array of favorited GIFS
   }).catch(error => {
@@ -17,6 +17,7 @@ router.get('/', (req, res) => {
 
 // add a new favorite
 router.post('/', (req, res) => {
+  console.log('in /favorite POST');
   console.log('category_id is:', req.body.category_id);
   console.log('giphy_id is:', req.body.giphy_id);
   const queryText = `INSERT INTO "favorites" ("giphy_id", "category_id", "giphy_url")
@@ -31,9 +32,18 @@ router.post('/', (req, res) => {
 });
 
 // update given favorite with a category id
-router.put('/:favId', (req, res) => {
-  // req.body should contain a category_id to add to this favorite image
-  res.sendStatus(200);
+router.put('/', (req, res) => {
+  console.log('in /favorite PUT');
+  const queryText = `UPDATE "favorites" 
+                    SET "category_id" = $1
+                    WHERE "id" = $2;`;
+  pool.query(queryText, [req.body.category_id, req.body.id]).then(result => {
+    console.log('/favorite PUT success');
+    res.sendStatus(200); // OK
+  }).catch(error => {
+    console.log('Error in /favorite PUT:', error);
+    res.sendStatus(500);
+  })
 });
 
 // delete a favorite
