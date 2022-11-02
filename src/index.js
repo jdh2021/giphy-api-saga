@@ -16,6 +16,7 @@ function* rootSaga() {
     yield takeEvery('POST_FAVORITE', postFavorite);
     yield takeEvery('FETCH_FAVORITES', fetchFavorites);
     yield takeEvery('PUT_FAVORITE', putFavorite);
+    yield takeEvery('DELETE_FAVORITE', deleteFavorite);
 };
 
 
@@ -79,6 +80,19 @@ function* putFavorite(action) {
     } catch (error) {
         console.log('Error in putFavorite:', error);
         alert('Error in putFavorite');
+    }
+}
+
+
+function* deleteFavorite(action) {
+    try {
+        console.log('in deleteFavorite. id to delete is:', action.payload);
+        yield axios.delete(`/api/favorite/${action.payload}`);
+        // after successful DELETE, dispatch 'FETCH_FAVORITES'
+        yield put({type: 'FETCH_FAVORITES'});
+    } catch (error) {
+        console.log('Error in deleteFavorite:', error);
+        alert('Error in deleteFavorite');
     }
 }
 

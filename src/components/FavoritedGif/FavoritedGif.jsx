@@ -12,6 +12,11 @@ function FavoritedGif({ favorite }) {
         dispatch({ type: 'PUT_FAVORITE', payload: { id: favoriteId, category_id: categoryId }});
     }
 
+    const deleteFavorite = ( favoriteId ) => {
+        console.log('in deleteFavorite. Id to delete is:', favoriteId);
+        dispatch({ type: 'DELETE_FAVORITE', payload: favoriteId });
+    }
+
     return (
         <tr key={favorite.id}>
             <td>
@@ -27,6 +32,7 @@ function FavoritedGif({ favorite }) {
                 </select>
                 <br />
                 <button onClick={() => updateFavorite(favorite.id, categoryId)}>Update</button>
+                <button onClick={() => deleteFavorite(favorite.id)}>Delete</button>
             </td>
         </tr>
     )

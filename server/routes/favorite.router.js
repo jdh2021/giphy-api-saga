@@ -47,8 +47,17 @@ router.put('/', (req, res) => {
 });
 
 // delete a favorite
-router.delete('/', (req, res) => {
-  res.sendStatus(200);
+router.delete('/:id', (req, res) => {
+  console.log('in /favorite DELETE. Id to delete is:', req.params.id);
+  const queryText = `DELETE FROM "favorites" 
+                    WHERE "id" = $1;`;
+  pool.query(queryText, [req.params.id]).then(result => {
+    console.log('/favorite DELETE success');
+    res.sendStatus(200); // OK
+  }).catch(error => {
+    console.log('Error in /favorite DELETE:', error);
+    res.sendStatus(500);
+  })
 });
 
 module.exports = router;
