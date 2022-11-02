@@ -24,9 +24,9 @@ function Search() {
         }
     }
 
-    // dispatch 'FETCH_CATEGORIES' when page loads
+    // dispatch 'FETCH_CATEGORIES' when Search component renders
     useEffect(() => {
-        dispatch({ type: "FETCH_CATEGORIES" })
+        dispatch({ type: 'FETCH_CATEGORIES' });
     }, []);
 
     return (

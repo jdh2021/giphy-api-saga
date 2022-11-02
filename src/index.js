@@ -64,7 +64,7 @@ function* postFavorite(action) {
         console.log('category id of favorite GIF is:', action.payload.category_id);
         console.log('url of favorited GIF is:', action.payload.giphy_url);
         yield axios.post('/api/favorite', action.payload);
-        console.log('postFavorite success');
+        yield put({type: 'FETCH_FAVORITES'});
     } catch (error) {
         console.log('Error in postFavorite:', error);
         alert('Error in postFavorite');
